@@ -6,7 +6,7 @@
 using namespace std;
 
 void pressEnterToContinue();
-
+bool isLetter(char ch);
 
 int main() {
 
@@ -20,14 +20,25 @@ int main() {
 	int letters = 0;
 	int words = 0;
 
+	char ch;
+	bool inWord = false;
+
 	if (!inFile.is_open()) {
 		cerr << "Error opening file." << endl;
 		return 1;
 	}
 
-	while (inFile >> word) {
-		words++;
-		letters += word.size();
+	while (inFile.get(ch)) {
+		if (isLetter(ch)) {
+			letters++;
+			if(!inWord){
+				inWord = true;
+				words++;
+			}
+		}
+		else {
+			inWord = false;
+		}
 	}
 
 	inFile.close();
@@ -44,4 +55,8 @@ void pressEnterToContinue() {
 	cout << "\nPress enter to continue... \n";
 	cin.clear();
 	while (cin.get() != '\n')continue;
+}
+
+bool isLetter(char ch) {
+	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
 }
